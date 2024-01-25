@@ -5,3 +5,11 @@
   color: #222831;
 }
 
+.text-box{
+  background-color: white;
+  color: #222831;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  overflow: hidden;
+}

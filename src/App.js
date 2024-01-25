@@ -2,10 +2,22 @@ import logo from './logo.svg';
 import './App.css';
 import PDFDoc from './components/PDFDoc';
 import { PDFViewer } from '@react-pdf/renderer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
-  const secions = [
+
+  const [input, setInput] = useState({
+    fname: "JOHN",
+    lname: "DOE",
+    address: "123, New Delhi, 110078",
+    phone: "1234567890",
+    email: "abc@gmail.com",
+    linkedin: "linkedin.com/in/abc",
+    github: "github.com/abc",
+
+  })
+
+  const [sections, setSections] = useState([
     {
       secHeading: "EXPERIENCE",
       headings: [
@@ -92,63 +104,196 @@ function App() {
         }
       ]
     }
-  ]
+  ])
 
-  const [input, setInput] = useState({
-    fname: "JOHN",
-    lname:"DOE",
-    address: "123, New Delhi, 110078",
-    phone: "1234567890",
-    email: "abc@gmail.com",
-    linkedin: "linkedin.com/in/abc",
-    github: "github.com/abc",
-    sections: null
+  const [section, setSection] = useState({
+    secHeading: "",
+    headings: [{
+      heading: "",
+      subHeading: "",
+      date: "",
+      place: "",
+      list: [],
+      para: [],
+      side: "",
+      projectLink: ""
+    }],
+
   })
+  // sessionStorage.setItem("localList", "");
+  const localList = sessionStorage.getItem("localList")!==""? JSON.parse(sessionStorage.getItem("localList")) : [];
+  const [list, setList] = useState(localList);
+  useEffect(()=>{
+    // console.log("Changing storage");
+    sessionStorage.setItem("localList", JSON.stringify(list))
+  }, [list]);
+  const [listItem, setListItem] = useState("");
 
-  const onChangeInput = (e)=>{setInput({...input, [e.target.name] : e.target.value})}
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-  const [sections, setSections] = useState([]);
 
+  const localPara = sessionStorage.getItem("localPara")!==""? JSON.parse(sessionStorage.getItem("localPara")) : [];
+  const [para, setPara] = useState(localPara);
+  useEffect(()=>{
+    sessionStorage.setItem("localPara", JSON.stringify(para));
+  }, [para]);
+
+  const [projectLink, setProjectLink] = useState("");
+
+  const onChangeInput = (e) => { setInput({ ...input, [e.target.name]: e.target.value }) }
 
 
   return (
-    <div className="App">
+    <div className="App d-flex">
 
-      <div className="container w-50 d-flex flex-column align-items-center">
+      <div className="container w-50 d-flex flex-column align-items-center overflow-hidden">
         <div className='d-flex'>
           <div className='d-flex flex-column align-items-center'>
-        <p className='my-2'>First Name:</p>
-        <input type="Text" className="form-control" id="" name="fname" value={input.fname} onChange={onChangeInput}/>
-        </div>
-        <div className='d-flex flex-column align-items-center'>
-        <p className='my-2'>Last Name:</p>
-        <input type="Text" className="form-control" id="" name="lname" value={input.lname} onChange={onChangeInput}/>
-        </div>
+            <p className='my-2'>First Name:</p>
+            <input type="Text" className="form-control" id="" name="fname" value={input.fname} onChange={onChangeInput} />
+          </div>
+          <div className='d-flex flex-column align-items-center'>
+            <p className='my-2'>Last Name:</p>
+            <input type="Text" className="form-control" id="" name="lname" value={input.lname} onChange={onChangeInput} />
+          </div>
         </div>
         <p className='my-2'>Address: </p>
-        <input type="Text" className="form-control" id="" name="address" value={input.address} onChange={onChangeInput}/>
-      <div className='d-flex my-5'>
-        <div className="d-flex flex-column align-items-center justify-content-center">
-        <p>Phone: </p>
-        <input type="Text" className="form-control" id="" name="phone" value={input.phone} onChange={onChangeInput}/>
+        <input type="Text" className="form-control" id="" name="address" value={input.address} onChange={onChangeInput} />
+        <div className='d-flex my-5'>
+          <div className="d-flex flex-column align-items-center justify-content-center">
+            <p>Phone: </p>
+            <input type="Text" className="form-control" id="" name="phone" value={input.phone} onChange={onChangeInput} />
+          </div>
+          <div className="d-flex flex-column align-items-center justify-content-center">
+            <p>Email: </p>
+            <input type="Text" className="form-control" id="" name="email" value={input.email} onChange={onChangeInput} />
+          </div>
+          <div className="d-flex flex-column align-items-center justify-content-center">
+            <p>Linkedin: </p>
+            <input type="Text" className="form-control" id="" name="linkedin" value={input.linkedin} onChange={onChangeInput} />
+          </div>
+          <div className="d-flex flex-column align-items-center justify-content-center">
+            <p>Github: </p>
+            <input type="Text" className="form-control" id="" name="github" value={input.github} onChange={onChangeInput} />
+          </div>
         </div>
-        <div className="d-flex flex-column align-items-center justify-content-center">
-        <p>Email: </p>
-        <input type="Text" className="form-control" id="" name="email" value={input.email} onChange={onChangeInput}/>
+
+        {/* SECTIONS */}
+
+
+        <div className='w-100 '>
+          <h2>Sections: </h2>
+          <p>Section Heading:</p>
+          <input type="text" className='form-control w-50'></input>
+          <div className="text-white bg-dark p-3 my-3 rounded-5">
+            <div className="d-flex justify-content-between">
+              <div className='my-3'>
+                <p>Heading:</p>
+                <input type="text" className='form-control w-100'></input>
+              </div>
+              <div className='d-flex flex-column align-items-center my-3'>
+                <p>|  Side Details:</p>
+                <input type="text" className='form-control w-75'></input>
+              </div>
+              <div className='d-flex flex-column align-items-center my-3'>
+                <p>Date:</p>
+                <input type="text" className='form-control w-75'></input>
+              </div>
+            </div>
+            <div className="d-flex justify-content-between">
+              <div className='my-3'>
+                <p>Sub-Heading:</p>
+                <input type="text" className='form-control w-100'></input>
+              </div>
+              <div className='d-flex flex-column align-items-center my-3'>
+                <p>Place:</p>
+                <input type="text" className='form-control w-75'></input>
+              </div>
+            </div>
+            <div className='d-flex align-items-center justify-content-evenly my-2'>
+              <strong>List: </strong>
+              <input type="text" className='form-control w-75' onChange={(e)=>{setListItem(e.target.value)}} value={listItem}></input>
+              <button className='btn btn-primary' onClick={()=>{if(listItem!==""){setList([...list, listItem]); setListItem(""); }}}>+</button>
+            </div>
+            {list.map((ele, index) => {
+              return (
+                <>
+                  <div className='d-flex justify-content-end my-2'>
+                    <div className='text-box w-75 rounded-3 px-2'>{ele}</div>
+                    <button className='btn btn-danger mx-4' onClick={()=>{
+                      let newList = list;
+                      // let index = newList.indexOf(ele);
+                      // console.log(index, "   ele  ", ele, newList);
+                    
+                      if(index>-1){
+                        
+                      newList.splice(index, 1);
+                      setList(newList);
+                      sessionStorage.setItem("localList", JSON.stringify(list));
+                      setList([...list, ])
+                      console.log(list)
+                      }
+                    }}>-</button>
+                  </div>
+                </>
+              )
+            })}
+
+
+
+            <div className='my-2 px-4'>
+              <strong>Sentence: </strong>
+              <div className="d-flex justify-content-between align-items-center">
+                <div className='my-3'>
+                  <p>Title:</p>
+                  <input type="text" className='form-control w-100' onChange={(e)=>{setTitle(e.target.value)}} value={title}></input>
+                </div>
+                :
+                <div className='d-flex flex-column align-items-center my-3'>
+                  <p>Description:</p>
+                  <input type="text" className='form-control w-75' onChange={(e)=>{setDescription(e.target.value)}} value={description}></input>
+                </div>
+                <div className='my-5'>
+                  <button className='btn btn-primary' onClick={()=>{if(!(title==="" && description==="")){setPara([...para, { title: title, description: description}]); setTitle(""); setDescription("");}}}>+</button>
+                </div>
+              </div>
+              {
+                para.map((ele, index)=>{
+                  return(
+                    <>
+                    <div className='d-flex justify-content-end my-2'>
+                      <div className='text-box w-25 rounded-3 p-2 mx-3 overflow-hidden'>{ele.title}</div>
+                      :
+                      <div className='text-box w-50 rounded-3 p-2 mx-3'>{ele.description}</div>
+                      <button className="btn btn-danger mx-2" onClick={()=>{
+                        let newPara = para;
+                        newPara.splice(index, 1);
+                        setPara(newPara);
+                        sessionStorage.setItem("localPara", JSON.stringify(para));
+                        setPara([...para]);
+                      }}>-</button>
+                    </div>
+                    </>
+                  )
+                })
+              }
+            </div>
+            <div className='d-flex align-items-center justify-content-evenly my-5 w-100'>
+              <strong>Project Link: </strong>
+              <input type="text" className='form-control w-75' onChange={(e)=>{setProjectLink(e.target.value)}} value={projectLink}></input>
+            </div>
+
+            <button className="btn btn-success">+ Add</button>
+
+          </div>
         </div>
-        <div className="d-flex flex-column align-items-center justify-content-center">
-        <p>Linkedin: </p>
-        <input type="Text" className="form-control" id="" name="linkedin" value={input.linkedin} onChange={onChangeInput}/>
-        </div>
-        <div className="d-flex flex-column align-items-center justify-content-center">
-        <p>Github: </p>
-        <input type="Text" className="form-control" id="" name="github" value={input.github} onChange={onChangeInput}/>
-        </div>
-      </div>
+
+        <button className='btn btn-success my-5 '>Submit Section</button>
 
       </div>
 
-      <PDFViewer width={"50%"} height={"700px"}><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer>
+      <PDFViewer width={"50%"} height={"700px"} className='sticky-top'><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer>
     </div>
   );
 }
