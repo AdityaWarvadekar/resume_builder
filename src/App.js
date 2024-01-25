@@ -106,6 +106,11 @@ function App() {
     }
   ])
 
+  // useEffect(()=>{
+  //   sessionStorage.setItem("localList", "abc");
+  //   sessionStorage.setItem("localPara", "abc");
+  // }, [])
+
   const [section, setSection] = useState({
     secHeading: "",
     headings: [{
@@ -120,11 +125,17 @@ function App() {
     }],
 
   })
-  // sessionStorage.setItem("localList", "");
-  const localList = sessionStorage.getItem("localList")!==""? JSON.parse(sessionStorage.getItem("localList")) : [];
+  const [secHeading, setSecHeading] = useState("");
+  const [heading, setHeading] = useState("");
+  const [subHeading, setSubHeading] = useState("");
+  const [date, setDate]=useState("");
+  const [place, setPlace] = useState("");
+  const [side, setSide] = useState("");
+
+  const localList = sessionStorage.getItem("localList")===null? [] : JSON.parse(sessionStorage.getItem("localList"));
+  // console.log(localList, "<----locallist");
   const [list, setList] = useState(localList);
   useEffect(()=>{
-    // console.log("Changing storage");
     sessionStorage.setItem("localList", JSON.stringify(list))
   }, [list]);
   const [listItem, setListItem] = useState("");
@@ -133,7 +144,7 @@ function App() {
   const [description, setDescription] = useState("");
 
 
-  const localPara = sessionStorage.getItem("localPara")!==""? JSON.parse(sessionStorage.getItem("localPara")) : [];
+  const localPara = sessionStorage.getItem("localPara")===null? []: JSON.parse(sessionStorage.getItem("localPara"));
   const [para, setPara] = useState(localPara);
   useEffect(()=>{
     sessionStorage.setItem("localPara", JSON.stringify(para));
@@ -142,6 +153,34 @@ function App() {
   const [projectLink, setProjectLink] = useState("");
 
   const onChangeInput = (e) => { setInput({ ...input, [e.target.name]: e.target.value }) }
+
+  const localHeadings = sessionStorage.getItem("localHeadings")===null? [] : JSON.parse(sessionStorage.getItem("localHeadings"));
+  const [headings, setHeadings] = useState(localHeadings);
+
+  useEffect(()=>{
+    sessionStorage.setItem("localHeadings", JSON.stringify(headings));
+  }, [headings]);
+
+  const addHeading = ()=>{
+    setHeadings([...headings, {
+      heading: heading,
+      side: side,
+      date: date,
+      place: place,
+      subHeading: subHeading,
+      list: list,
+      para: para,
+      projectLink: projectLink
+    }]);
+    setList([]);
+    setPara([]);
+    setHeading("");
+    setPlace("");
+    setDate("");
+    setSubHeading("");
+    setSide("");
+    setProjectLink("");
+  }
 
 
   return (
@@ -185,30 +224,30 @@ function App() {
         <div className='w-100 '>
           <h2>Sections: </h2>
           <p>Section Heading:</p>
-          <input type="text" className='form-control w-50'></input>
+          <input type="text" className='form-control w-50' onChange={(e)=>{setSecHeading(e.target.value)}} value={secHeading}></input>
           <div className="text-white bg-dark p-3 my-3 rounded-5">
             <div className="d-flex justify-content-between">
               <div className='my-3'>
                 <p>Heading:</p>
-                <input type="text" className='form-control w-100'></input>
+                <input type="text" className='form-control w-100' onChange={(e)=>{setHeading(e.target.value)}} value={heading}></input>
               </div>
               <div className='d-flex flex-column align-items-center my-3'>
                 <p>|  Side Details:</p>
-                <input type="text" className='form-control w-75'></input>
+                <input type="text" className='form-control w-75' onChange={(e)=>{setSide(e.target.value)}} value={side}></input>
               </div>
               <div className='d-flex flex-column align-items-center my-3'>
                 <p>Date:</p>
-                <input type="text" className='form-control w-75'></input>
+                <input type="text" className='form-control w-75' onChange={(e)=>{setDate(e.target.value)}} value={date}></input>
               </div>
             </div>
             <div className="d-flex justify-content-between">
               <div className='my-3'>
                 <p>Sub-Heading:</p>
-                <input type="text" className='form-control w-100'></input>
+                <input type="text" className='form-control w-100' onChange={(e)=>{setSubHeading(e.target.value)}} value={subHeading}></input>
               </div>
               <div className='d-flex flex-column align-items-center my-3'>
                 <p>Place:</p>
-                <input type="text" className='form-control w-75'></input>
+                <input type="text" className='form-control w-75' onChange={(e)=>{setPlace(e.target.value)}} value={place}></input>
               </div>
             </div>
             <div className='d-flex align-items-center justify-content-evenly my-2'>
@@ -284,12 +323,12 @@ function App() {
               <input type="text" className='form-control w-75' onChange={(e)=>{setProjectLink(e.target.value)}} value={projectLink}></input>
             </div>
 
-            <button className="btn btn-success">+ Add</button>
+            <button className="btn btn-success" onClick={addHeading}>+ Add</button>
 
           </div>
         </div>
 
-        <button className='btn btn-success my-5 '>Submit Section</button>
+        <button className='btn btn-success my-5 ' onClick={submitSection}>Submit Section</button>
 
       </div>
 
