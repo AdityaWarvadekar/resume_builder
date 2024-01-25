@@ -95,23 +95,17 @@ function App() {
   ]
 
   const [input, setInput] = useState({
-    fname: "",
-    lname: "",
-    address: "",
-    phone: "",
-    email: "",
-    linkedin: "",
-    github: ""
+    fname: "JOHN",
+    lname:"DOE",
+    address: "123, New Delhi, 110078",
+    phone: "1234567890",
+    email: "abc@gmail.com",
+    linkedin: "linkedin.com/in/abc",
+    github: "github.com/abc",
+    sections: null
   })
 
-  const onChangeInput = (e) => { setInput({ ...input, [e.target.name]: e.target.value }) }
-
-  let data = [];
-  let basicInfo = data[0]? data[0]: "";
-  const captureInput = ()=>{
-    data.push(input);
-    console.log(data);
-  }
+  const onChangeInput = (e)=>{setInput({...input, [e.target.name] : e.target.value})}
 
   const [sections, setSections] = useState([]);
 
@@ -122,40 +116,39 @@ function App() {
 
       <div className="container w-50 d-flex flex-column align-items-center">
         <div className='d-flex'>
-          <div className='d-flex flex-column align-items-center px-3'>
-            <p className='my-2'>First Name:</p>
-            <input type="Text" className="form-control" id="" name="fname" value={input.fname} onChange={onChangeInput} />
-          </div>
-          <div className='d-flex flex-column align-items-center px-3'>
-            <p className='my-2'>Last Name:</p>
-            <input type="Text" className="form-control" id="" name="lname" value={input.lname} onChange={onChangeInput} />
-          </div>
+          <div className='d-flex flex-column align-items-center'>
+        <p className='my-2'>First Name:</p>
+        <input type="Text" className="form-control" id="" name="fname" value={input.fname} onChange={onChangeInput}/>
+        </div>
+        <div className='d-flex flex-column align-items-center'>
+        <p className='my-2'>Last Name:</p>
+        <input type="Text" className="form-control" id="" name="lname" value={input.lname} onChange={onChangeInput}/>
+        </div>
         </div>
         <p className='my-2'>Address: </p>
-        <input type="Text" className="form-control" id="" name="address" value={input.address} onChange={onChangeInput} />
-        <div className='d-flex my-5'>
-          <div className="d-flex flex-column align-items-center justify-content-center">
-            <p>Phone: </p>
-            <input type="Text" className="form-control" id="" name="phone" value={input.phone} onChange={onChangeInput} />
-          </div>
-          <div className="d-flex flex-column align-items-center justify-content-center">
-            <p>Email: </p>
-            <input type="Text" className="form-control" id="" name="email" value={input.email} onChange={onChangeInput} />
-          </div>
-          <div className="d-flex flex-column align-items-center justify-content-center">
-            <p>Linkedin: </p>
-            <input type="Text" className="form-control" id="" name="linkedin" value={input.linkedin} onChange={onChangeInput} />
-          </div>
-          <div className="d-flex flex-column align-items-center justify-content-center">
-            <p>Github: </p>
-            <input type="Text" className="form-control" id="" name="github" value={input.github} onChange={onChangeInput} />
-          </div>
+        <input type="Text" className="form-control" id="" name="address" value={input.address} onChange={onChangeInput}/>
+      <div className='d-flex my-5'>
+        <div className="d-flex flex-column align-items-center justify-content-center">
+        <p>Phone: </p>
+        <input type="Text" className="form-control" id="" name="phone" value={input.phone} onChange={onChangeInput}/>
         </div>
-        <button className="btn btn-success" onClick={captureInput}>Submit</button>
+        <div className="d-flex flex-column align-items-center justify-content-center">
+        <p>Email: </p>
+        <input type="Text" className="form-control" id="" name="email" value={input.email} onChange={onChangeInput}/>
+        </div>
+        <div className="d-flex flex-column align-items-center justify-content-center">
+        <p>Linkedin: </p>
+        <input type="Text" className="form-control" id="" name="linkedin" value={input.linkedin} onChange={onChangeInput}/>
+        </div>
+        <div className="d-flex flex-column align-items-center justify-content-center">
+        <p>Github: </p>
+        <input type="Text" className="form-control" id="" name="github" value={input.github} onChange={onChangeInput}/>
+        </div>
+      </div>
 
       </div>
 
-      <PDFViewer width={"50%"} height={"700px"}><PDFDoc fname={basicInfo.fname} lname={basicInfo.lname} phone={basicInfo.phone} email={basicInfo.email} linkedin={basicInfo.linkedin} github={basicInfo.github} sections={sections} /></PDFViewer>
+      <PDFViewer width={"50%"} height={"700px"}><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer>
     </div>
   );
 }

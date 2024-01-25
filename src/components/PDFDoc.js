@@ -213,10 +213,13 @@ function PDFDoc(props) {
                     <Text><Text style={styles.caps}>{props.fname? props.fname.slice(0, 1):""}</Text>{props.fname? props.fname.slice(1):""} <Text style={styles.caps}>{props.lname?props.lname.slice(0, 1):""}</Text>{props.lname?props.lname.slice(1):""}</Text>
                     <Text style={styles.subHeader}>{props.address ? props.address : ""}</Text>
                     <View style={styles.inline}>
-                        <Text style={{ padding: "0 5px" }}><Image src={props.phone? phone: ""} style={styles.icon} /> {props.phone ? props.phone : ""}</Text>
-                        <Text style={{ textDecoration: "underline", padding: "0 5px" }}><Image src={props.email? email:""} style={styles.icon} /><Link src={props.email ? props.email : ""} /> {props.email ? props.email : ""}</Text>
-                        <Text style={{ textDecoration: "underline", padding: "0 5px" }}><Image src={props.linkedin ? linkedin : ""} style={styles.icon} /><Link src={props.linkedin ? props.linkedin : ""} /> {props.linkedin ? props.linkedin : ""}</Text>
-                        <Text style={{ textDecoration: "underline", padding: "0 5px" }}><Image src={props.github ? github : ""} style={styles.icon} /><Link src={props.github ? props.github : ""} /> {props.github ? props.github : ""}</Text>
+                        {props.phone? <Text style={{ padding: "0 5px" }}><Image src={phone} style={styles.icon} /> {props.phone ? props.phone : ""}</Text> : ""}
+
+                        {props.email? <Text style={{ textDecoration: "underline", padding: "0 5px" }}><Image src={email} style={styles.icon} /><Link src={props.email ? props.email : ""} /> {props.email ? props.email : ""}</Text> : ""}
+
+                        {props.linkedin? <Text style={{ textDecoration: "underline", padding: "0 5px" }}><Image src={linkedin} style={styles.icon} /><Link src={props.linkedin ? props.linkedin : ""} /> {props.linkedin ? props.linkedin : ""}</Text>:""}
+
+                        {props.github?<Text style={{ textDecoration: "underline", padding: "0 5px" }}><Image src={ github } style={styles.icon} /><Link src={props.github ? props.github : ""} /> {props.github ? props.github : ""}</Text>: ""}
                     </View>
 
                     {props.sections ?
