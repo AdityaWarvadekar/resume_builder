@@ -270,19 +270,15 @@ function App() {
                   {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download')}
                 </PDFDownloadLink> <i class="fa-solid fa-download"></i></div></button>
               </div>
-
             </div>
           </div>
-
-
-
+          <h5 style={{fontFamily:"Pricedown"}}>CREATED BY : <a href="mailto:adityawarvadekar11@gmail.com">ADITYA WARVADEKAR</a></h5>
         </div>
-
 
 
         <PDFViewer width={"50%"} height={"700px"} className='pdfDoc'><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer>
       </div >
-
+      
     </>
 
   );
