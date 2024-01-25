@@ -1,0 +1,14 @@
+MAP ALL THE EXPERIENCES OF A SECTION
+
+[
+    {
+        heading: "xtc",
+        subHeading: "dfso",
+        date: "dfkmsd",
+        place: "skdnfsokd",
+        list: {[
+            dskkmsdkfkns,sdfsodms,dfsdknfsod
+        ]
+        }
+    }
+]
