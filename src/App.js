@@ -17,94 +17,7 @@ function App() {
 
   })
 
-  const [sections, setSections] = useState([
-    {
-      secHeading: "EXPERIENCE",
-      headings: [
-        {
-          heading: "Newbieron Technologies",
-          subHeading: "Web Developer Intern",
-          date: "Jul 2023 - Sep 2023",
-          place: "New Delhi",
-          list: [
-            "Created Responsive Pages", "Attended this this this event cerononsdgek",
-            "Contributed this this this and thids",
-            "Got this award and that appraisal"
-          ]
-        },
-        {
-          heading: "Newbieron Technologies",
-          subHeading: "Web Developer Intern",
-          date: "Jul 2023 - Sep 2023",
-          place: "New Delhi",
-          list: [
-            "Created Responsive Pages", "Attended this this this event cerononsdgek",
-            "Contributed this this this and thids",
-            "Got this award and that appraisal"
-          ],
-        }
-      ]
-    },
-    {
-      secHeading: "EDUCATION",
-      headings: [
-        {
-          heading: "Guru Gobind Singh Indraprastha University",
-          subHeading: "Bachelors of Technology in Computer Science",
-          date: "Jul 2025",
-          place: "Dwarka, Delhi"
-        }
-      ]
-    },
-    {
-      secHeading: "PROJECTS",
-      headings: [
-
-        {
-          heading: "TnP_USICT",
-          side: "React, MongoDB, MERN, AWS",
-          projectLink: "www.google.com",
-          list: [
-            "Developed Full Stack Application",
-            "Implemented Authentication using JWT Tokens",
-          ],
-          date: "Aug 23 - Sep 23"
-        }
-      ]
-    },
-    {
-      secHeading: "TECHNICAL SKILLS",
-      headings: [
-        {
-          para: [
-            {
-              title: "Languages",
-              description: "C++, C, Java, Python, HTML, CSS, JS, MySQL"
-            },
-            {
-              title: "Frameworks",
-              description: "C++, C, Java, Python, HTML, CSS, JS, MySQL"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      secHeading: "ACHIEVEMENTS",
-      headings: [
-        {
-          para: [
-            {
-              description: "Secured First Position in IEEE Synapse Hackathon"
-            },
-            {
-              description: "Secured Second Position in IEEE Hack-U-Thon"
-            }
-          ]
-        }
-      ]
-    }
-  ])
+  const [sections, setSections] = useState([]);
 
   // useEffect(()=>{
   //   sessionStorage.setItem("localList", "abc");
@@ -123,19 +36,18 @@ function App() {
       side: "",
       projectLink: ""
     }],
-
   })
   const [secHeading, setSecHeading] = useState("");
   const [heading, setHeading] = useState("");
   const [subHeading, setSubHeading] = useState("");
-  const [date, setDate]=useState("");
+  const [date, setDate] = useState("");
   const [place, setPlace] = useState("");
   const [side, setSide] = useState("");
 
-  const localList = sessionStorage.getItem("localList")===null? [] : JSON.parse(sessionStorage.getItem("localList"));
+  const localList = sessionStorage.getItem("localList") === null ? [] : JSON.parse(sessionStorage.getItem("localList"));
   // console.log(localList, "<----locallist");
   const [list, setList] = useState(localList);
-  useEffect(()=>{
+  useEffect(() => {
     sessionStorage.setItem("localList", JSON.stringify(list))
   }, [list]);
   const [listItem, setListItem] = useState("");
@@ -144,9 +56,9 @@ function App() {
   const [description, setDescription] = useState("");
 
 
-  const localPara = sessionStorage.getItem("localPara")===null? []: JSON.parse(sessionStorage.getItem("localPara"));
+  const localPara = sessionStorage.getItem("localPara") === null ? [] : JSON.parse(sessionStorage.getItem("localPara"));
   const [para, setPara] = useState(localPara);
-  useEffect(()=>{
+  useEffect(() => {
     sessionStorage.setItem("localPara", JSON.stringify(para));
   }, [para]);
 
@@ -154,14 +66,14 @@ function App() {
 
   const onChangeInput = (e) => { setInput({ ...input, [e.target.name]: e.target.value }) }
 
-  const localHeadings = sessionStorage.getItem("localHeadings")===null? [] : JSON.parse(sessionStorage.getItem("localHeadings"));
+  const localHeadings = sessionStorage.getItem("localHeadings") === null ? [] : JSON.parse(sessionStorage.getItem("localHeadings"));
   const [headings, setHeadings] = useState(localHeadings);
 
-  useEffect(()=>{
+  useEffect(() => {
     sessionStorage.setItem("localHeadings", JSON.stringify(headings));
   }, [headings]);
 
-  const addHeading = ()=>{
+  const addHeading = () => {
     setHeadings([...headings, {
       heading: heading,
       side: side,
@@ -180,8 +92,19 @@ function App() {
     setSubHeading("");
     setSide("");
     setProjectLink("");
+
   }
 
+  const submitSection = () => {
+    if (secHeading === "" && sessionStorage.getItem("localHeadings") === JSON.parse("[]"))
+      return;
+    setSections([...sections, {
+      secHeading: secHeading,
+      headings: headings
+    }]);
+    setSecHeading("");
+    setHeadings([]);
+  }
 
   return (
     <div className="App d-flex">
@@ -224,54 +147,54 @@ function App() {
         <div className='w-100 '>
           <h2>Sections: </h2>
           <p>Section Heading:</p>
-          <input type="text" className='form-control w-50' onChange={(e)=>{setSecHeading(e.target.value)}} value={secHeading}></input>
+          <input type="text" className='form-control w-50' onChange={(e) => { setSecHeading(e.target.value) }} value={secHeading}></input>
           <div className="text-white bg-dark p-3 my-3 rounded-5">
             <div className="d-flex justify-content-between">
               <div className='my-3'>
                 <p>Heading:</p>
-                <input type="text" className='form-control w-100' onChange={(e)=>{setHeading(e.target.value)}} value={heading}></input>
+                <input type="text" className='form-control w-100' onChange={(e) => { setHeading(e.target.value) }} value={heading}></input>
               </div>
               <div className='d-flex flex-column align-items-center my-3'>
                 <p>|  Side Details:</p>
-                <input type="text" className='form-control w-75' onChange={(e)=>{setSide(e.target.value)}} value={side}></input>
+                <input type="text" className='form-control w-75' onChange={(e) => { setSide(e.target.value) }} value={side}></input>
               </div>
               <div className='d-flex flex-column align-items-center my-3'>
                 <p>Date:</p>
-                <input type="text" className='form-control w-75' onChange={(e)=>{setDate(e.target.value)}} value={date}></input>
+                <input type="text" className='form-control w-75' onChange={(e) => { setDate(e.target.value) }} value={date}></input>
               </div>
             </div>
             <div className="d-flex justify-content-between">
               <div className='my-3'>
                 <p>Sub-Heading:</p>
-                <input type="text" className='form-control w-100' onChange={(e)=>{setSubHeading(e.target.value)}} value={subHeading}></input>
+                <input type="text" className='form-control w-100' onChange={(e) => { setSubHeading(e.target.value) }} value={subHeading}></input>
               </div>
               <div className='d-flex flex-column align-items-center my-3'>
                 <p>Place:</p>
-                <input type="text" className='form-control w-75' onChange={(e)=>{setPlace(e.target.value)}} value={place}></input>
+                <input type="text" className='form-control w-75' onChange={(e) => { setPlace(e.target.value) }} value={place}></input>
               </div>
             </div>
             <div className='d-flex align-items-center justify-content-evenly my-2'>
               <strong>List: </strong>
-              <input type="text" className='form-control w-75' onChange={(e)=>{setListItem(e.target.value)}} value={listItem}></input>
-              <button className='btn btn-primary' onClick={()=>{if(listItem!==""){setList([...list, listItem]); setListItem(""); }}}>+</button>
+              <input type="text" className='form-control w-75' onChange={(e) => { setListItem(e.target.value) }} value={listItem}></input>
+              <button className='btn btn-primary' onClick={() => { if (listItem !== "") { setList([...list, listItem]); setListItem(""); } }}>+</button>
             </div>
             {list.map((ele, index) => {
               return (
                 <>
                   <div className='d-flex justify-content-end my-2'>
                     <div className='text-box w-75 rounded-3 px-2'>{ele}</div>
-                    <button className='btn btn-danger mx-4' onClick={()=>{
+                    <button className='btn btn-danger mx-4' onClick={() => {
                       let newList = list;
                       // let index = newList.indexOf(ele);
                       // console.log(index, "   ele  ", ele, newList);
-                    
-                      if(index>-1){
-                        
-                      newList.splice(index, 1);
-                      setList(newList);
-                      sessionStorage.setItem("localList", JSON.stringify(list));
-                      setList([...list, ])
-                      console.log(list)
+
+                      if (index > -1) {
+
+                        newList.splice(index, 1);
+                        setList(newList);
+                        sessionStorage.setItem("localList", JSON.stringify(list));
+                        setList([...list,])
+                        console.log(list)
                       }
                     }}>-</button>
                   </div>
@@ -286,33 +209,33 @@ function App() {
               <div className="d-flex justify-content-between align-items-center">
                 <div className='my-3'>
                   <p>Title:</p>
-                  <input type="text" className='form-control w-100' onChange={(e)=>{setTitle(e.target.value)}} value={title}></input>
+                  <input type="text" className='form-control w-100' onChange={(e) => { setTitle(e.target.value) }} value={title}></input>
                 </div>
                 :
                 <div className='d-flex flex-column align-items-center my-3'>
                   <p>Description:</p>
-                  <input type="text" className='form-control w-75' onChange={(e)=>{setDescription(e.target.value)}} value={description}></input>
+                  <input type="text" className='form-control w-75' onChange={(e) => { setDescription(e.target.value) }} value={description}></input>
                 </div>
                 <div className='my-5'>
-                  <button className='btn btn-primary' onClick={()=>{if(!(title==="" && description==="")){setPara([...para, { title: title, description: description}]); setTitle(""); setDescription("");}}}>+</button>
+                  <button className='btn btn-primary' onClick={() => { if (!(title === "" && description === "")) { setPara([...para, { title: title, description: description }]); setTitle(""); setDescription(""); } }}>+</button>
                 </div>
               </div>
               {
-                para.map((ele, index)=>{
-                  return(
+                para.map((ele, index) => {
+                  return (
                     <>
-                    <div className='d-flex justify-content-end my-2'>
-                      <div className='text-box w-25 rounded-3 p-2 mx-3 overflow-hidden'>{ele.title}</div>
-                      :
-                      <div className='text-box w-50 rounded-3 p-2 mx-3'>{ele.description}</div>
-                      <button className="btn btn-danger mx-2" onClick={()=>{
-                        let newPara = para;
-                        newPara.splice(index, 1);
-                        setPara(newPara);
-                        sessionStorage.setItem("localPara", JSON.stringify(para));
-                        setPara([...para]);
-                      }}>-</button>
-                    </div>
+                      <div className='d-flex justify-content-end my-2'>
+                        <div className='text-box w-25 rounded-3 p-2 mx-3 overflow-hidden'>{ele.title}</div>
+                        :
+                        <div className='text-box w-50 rounded-3 p-2 mx-3'>{ele.description}</div>
+                        <button className="btn btn-danger mx-2" onClick={() => {
+                          let newPara = para;
+                          newPara.splice(index, 1);
+                          setPara(newPara);
+                          sessionStorage.setItem("localPara", JSON.stringify(para));
+                          setPara([...para]);
+                        }}>-</button>
+                      </div>
                     </>
                   )
                 })
@@ -320,21 +243,124 @@ function App() {
             </div>
             <div className='d-flex align-items-center justify-content-evenly my-5 w-100'>
               <strong>Project Link: </strong>
-              <input type="text" className='form-control w-75' onChange={(e)=>{setProjectLink(e.target.value)}} value={projectLink}></input>
+              <input type="text" className='form-control w-75' onChange={(e) => { setProjectLink(e.target.value) }} value={projectLink}></input>
             </div>
 
-            <button className="btn btn-success" onClick={addHeading}>+ Add</button>
-
+            <div className='d-flex justify-content-center my-3'>
+              <button className="btn btn-primary w-25" onClick={() => {
+                if (heading === "" && side === "" && date === "" && place === "" && subHeading === "" && projectLink === "" && list.length===0 && para.length===0) {
+                  console.log("All variables are empty.");
+                } else {
+                  // Call addHeading function (replace this with your actual function)
+                  console.log("callinnnngngngngn");
+                  addHeading();
+                }
+              }}>+ Add Heading</button>
+            </div>
+            <div className='d-flex justify-content-center'>
+              <button className='btn btn-success w-50' onClick={submitSection}>Submit Section</button>
+            </div>
           </div>
         </div>
 
-        <button className='btn btn-success my-5 ' onClick={submitSection}>Submit Section</button>
+
 
       </div>
 
       <PDFViewer width={"50%"} height={"700px"} className='sticky-top'><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer>
-    </div>
+    </div >
   );
 }
 
 export default App;
+
+
+
+
+
+// {
+//   secHeading: "EXPERIENCE",
+//   headings: [
+//     {
+//       heading: "Newbieron Technologies",
+//       subHeading: "Web Developer Intern",
+//       date: "Jul 2023 - Sep 2023",
+//       place: "New Delhi",
+//       list: [
+//         "Created Responsive Pages", "Attended this this this event cerononsdgek",
+//         "Contributed this this this and thids",
+//         "Got this award and that appraisal"
+//       ]
+//     },
+//     {
+//       heading: "Newbieron Technologies",
+//       subHeading: "Web Developer Intern",
+//       date: "Jul 2023 - Sep 2023",
+//       place: "New Delhi",
+//       list: [
+//         "Created Responsive Pages", "Attended this this this event cerononsdgek",
+//         "Contributed this this this and thids",
+//         "Got this award and that appraisal"
+//       ],
+//     }
+//   ]
+// },
+// {
+//   secHeading: "EDUCATION",
+//   headings: [
+//     {
+//       heading: "Guru Gobind Singh Indraprastha University",
+//       subHeading: "Bachelors of Technology in Computer Science",
+//       date: "Jul 2025",
+//       place: "Dwarka, Delhi"
+//     }
+//   ]
+// },
+// {
+//   secHeading: "PROJECTS",
+//   headings: [
+
+//     {
+//       heading: "TnP_USICT",
+//       side: "React, MongoDB, MERN, AWS",
+//       projectLink: "www.google.com",
+//       list: [
+//         "Developed Full Stack Application",
+//         "Implemented Authentication using JWT Tokens",
+//       ],
+//       date: "Aug 23 - Sep 23"
+//     }
+//   ]
+// },
+// {
+//   secHeading: "TECHNICAL SKILLS",
+//   headings: [
+//     {
+//       para: [
+//         {
+//           title: "Languages",
+//           description: "C++, C, Java, Python, HTML, CSS, JS, MySQL"
+//         },
+//         {
+//           title: "Frameworks",
+//           description: "C++, C, Java, Python, HTML, CSS, JS, MySQL"
+//         }
+//       ]
+//     }
+//   ]
+// },
+// {
+//   secHeading: "ACHIEVEMENTS",
+//   headings: [
+//     {
+//       para: [
+//         {
+//           description: "Secured First Position in IEEE Synapse Hackathon"
+//         },
+//         {
+//           description: "Secured Second Position in IEEE Hack-U-Thon"
+//         }
+//       ]
+//     }
+//   ]
+// }
