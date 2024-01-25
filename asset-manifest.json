@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/resume_builder/static/css/main.b1aa9dcf.css",
+    "main.js": "/resume_builder/static/js/main.dc252eb0.js",
+    "static/js/787.ebd68730.chunk.js": "/resume_builder/static/js/787.ebd68730.chunk.js",
+    "static/media/cmunti.ttf": "/resume_builder/static/media/cmunti.242b10aa04f441336096.ttf",
+    "static/media/cmunbi.ttf": "/resume_builder/static/media/cmunbi.a1ae6b7fbbc1ebd53c56.ttf",
+    "static/media/cmunrm.ttf": "/resume_builder/static/media/cmunrm.8ff5cee913df84291549.ttf",
+    "static/media/cmunbx.ttf": "/resume_builder/static/media/cmunbx.c97a73040fda7e3cb554.ttf",
+    "static/media/github.jpg": "/resume_builder/static/media/github.70cfd4725e6347edd46e.jpg",
+    "static/media/pricedown bl.otf": "/resume_builder/static/media/pricedown bl.6bea83af9fab92ca7c40.otf",
+    "static/media/email.jpg": "/resume_builder/static/media/email.732f244cde2092b09913.jpg",
+    "static/media/phone.jpg": "/resume_builder/static/media/phone.dcf3fb0c8d9e603f0330.jpg",
+    "static/media/linkedin.jpg": "/resume_builder/static/media/linkedin.ec47c8ed7333f966c7a4.jpg",
+    "static/media/logo.svg": "/resume_builder/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/resume_builder/index.html",
+    "main.b1aa9dcf.css.map": "/resume_builder/static/css/main.b1aa9dcf.css.map",
+    "main.dc252eb0.js.map": "/resume_builder/static/js/main.dc252eb0.js.map",
+    "787.ebd68730.chunk.js.map": "/resume_builder/static/js/787.ebd68730.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b1aa9dcf.css",
+    "static/js/main.dc252eb0.js"
+  ]
+}
