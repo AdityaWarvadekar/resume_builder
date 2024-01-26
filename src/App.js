@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import PDFDoc from './components/PDFDoc';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { PDFDownloadLink, PDFViewer, usePDF } from '@react-pdf/renderer';
+import { MobilePDFReader } from 'react-read-pdf';
 import { useEffect, useReducer, useRef, useState } from 'react';
 
 function App() {
@@ -17,34 +18,30 @@ function App() {
 
   })
 
-  const [sections, setSections] = useState([]);
+
 
   // useEffect(()=>{
   //   sessionStorage.setItem("localList", "abc");
   //   sessionStorage.setItem("localPara", "abc");
   // }, [])
 
-  const [section, setSection] = useState({
-    secHeading: "",
-    headings: [{
-      heading: "",
-      subHeading: "",
-      date: "",
-      place: "",
-      list: [],
-      para: [],
-      side: "",
-      projectLink: ""
-    }],
-  })
-  const [secHeading, setSecHeading] = useState("");
-  const [heading, setHeading] = useState("");
-  const [subHeading, setSubHeading] = useState("");
-  const [date, setDate] = useState("");
-  const [place, setPlace] = useState("");
-  const [side, setSide] = useState("");
 
-  const localList = sessionStorage.getItem("localList") === null ? [] : JSON.parse(sessionStorage.getItem("localList"));
+
+  const [secHeading, setSecHeading] = useState("EXPERIENCE");
+  const [heading, setHeading] = useState("ABC Technologies");
+  const [subHeading, setSubHeading] = useState("APP Developer Intern");
+  const [date, setDate] = useState("Jan 22 - Feb 22");
+  const [place, setPlace] = useState("Place");
+  const [side, setSide] = useState("Java, Kotlin etc.");
+
+
+
+
+  const localList = sessionStorage.getItem("localList") === null ? [
+    "This is my role", "Did this task",
+    "Created Responsive Pages",
+    "Got this award and that appraisal"
+  ] : JSON.parse(sessionStorage.getItem("localList"));
   // console.log(localList, "<----locallist");
   const [list, setList] = useState(localList);
   useEffect(() => {
@@ -56,7 +53,7 @@ function App() {
   const [description, setDescription] = useState("");
 
 
-  const localPara = sessionStorage.getItem("localPara") === null ? [] : JSON.parse(sessionStorage.getItem("localPara"));
+  const localPara = sessionStorage.getItem("localPara") === null ? [{ title: "Tech Club", description: "Conducted sessions etc." }] : JSON.parse(sessionStorage.getItem("localPara"));
   const [para, setPara] = useState(localPara);
   useEffect(() => {
     sessionStorage.setItem("localPara", JSON.stringify(para));
@@ -72,6 +69,37 @@ function App() {
   useEffect(() => {
     sessionStorage.setItem("localHeadings", JSON.stringify(headings));
   }, [headings]);
+
+  // const [section, setSection] = useState({
+  //   secHeading: secHeading,
+  //   headings: [{
+  //     heading: heading,
+  //     subHeading: subHeading,
+  //     date: date,
+  //     place: place,
+  //     list: list,
+  //     para: para,
+  //     side: side,
+  //     projectLink: projectLink
+  //   }],
+  // })
+
+  const localSections = sessionStorage.getItem("localSections") === null ? [{
+    secHeading: "SAMPLE LAYOUT",
+    headings: [
+      {
+        heading: heading,
+        subHeading: subHeading,
+        date: date,
+        place: place,
+        list: list
+      }
+    ]
+  }] : JSON.parse(sessionStorage.getItem("localHeadings"));
+  const [sections, setSections] = useState(localSections);
+  useEffect(() => {
+    sessionStorage.setItem("localSections", JSON.stringify(sections));
+  }, [sections])
 
   const addHeading = () => {
     setHeadings([...headings, {
@@ -98,14 +126,30 @@ function App() {
   const btnref = useRef(null);
 
   const submitSection = () => {
-    if (secHeading === "" && sessionStorage.getItem("localHeadings") === JSON.parse("[]"))
+    if (secHeading === "" && sessionStorage.getItem("localHeadings") === JSON.parse("[]")) {
+      window.alert("Section Empty!");
       return;
-    setSections([...sections, {
-      secHeading: secHeading,
-      headings: headings
-    }]);
-    setSecHeading("");
-    setHeadings([]);
+    }
+    else if (heading !== "" || subHeading !== "" || date !== "" || place !== "" || listItem !== "" || list.length !== 0 || para.length !== 0 || title !== "" || description !== "" || projectLink !== "" || side !== "") {
+      if (window.confirm("Submit the section without adding current component?")) {
+        setSections([...sections, {
+          secHeading: secHeading,
+          headings: headings
+        }]);
+        // setSections([...sections, section]);
+        setSecHeading("");
+        setHeadings([]);
+      }
+    }
+    else {
+      setSections([...sections, {
+        secHeading: secHeading,
+        headings: headings
+      }]);
+      // setSections([...sections, section]);
+      setSecHeading("");
+      setHeadings([]);
+    }
   }
 
   return (
@@ -119,11 +163,11 @@ function App() {
           <div className='d-flex'>
             <div className='d-flex flex-column align-items-center'>
               <p className='my-2'>First Name:</p>
-              <input type="Text" className="form-control" id="" name="fname" value={input.fname} onChange={onChangeInput} />
+              <input type="Text" className="form-control" id="" name="fname" value={input.fname} onChange={(e)=>{setInput({...input, fname: e.target.value.toUpperCase()})}} />
             </div>
             <div className='d-flex flex-column align-items-center'>
               <p className='my-2'>Last Name:</p>
-              <input type="Text" className="form-control" id="" name="lname" value={input.lname} onChange={onChangeInput} />
+              <input type="Text" className="form-control" id="" name="lname" value={input.lname} onChange={(e)=>{setInput({...input, lname: e.target.value.toUpperCase()})}} />
             </div>
           </div>
           <p className='my-2'>Address: </p>
@@ -153,9 +197,54 @@ function App() {
           <div className=' section '>
 
             <div className="text-white bg-dark p-3 my-3 rounded-5">
-              <h2>Sections: </h2>
+              <div className='d-flex flex-wrap align-items-center'>
+                <h5>Sections: </h5>
+                <div className='d-flex justify-content-evenly w-75 flex-wrap'>
+                  {sections.map((section, index) => {
+                    return (<>
+                      <div className=" d-flex bg-primary text-white align-items-center rounded-2 px-2 my-2">
+                        <p className="my-2" style={{ fontSize: "2vmin" }}>{section.secHeading}</p>
+                        <button className='btn btn-danger p-1 m-1' onClick={() => {
+                          if(window.confirm("Delete the Section: ", section.secHeading, "?")){
+                            let newSections = sections;
+                            newSections.splice(index, 1);
+                            setSections(newSections);
+                            setSections([...sections]);
+                          }
+                          // console.log("SECTOIN: ", section, index);
+                          // let newSections = sections;
+                          // newSections.splice(index, 1);
+                          // setSections(newSections);
+                          // console.log(sections);
+                        }}>x</button>
+                      </div>
+                    </>)
+                  })}
+                </div>
+
+              </div>
+
+              <h2>Section: </h2>
               <p>Section Heading:</p>
-              <input type="text" className='form-control w-50' onChange={(e) => { setSecHeading(e.target.value) }} value={secHeading}></input>
+              <input type="text" className='form-control w-50' onChange={(e) => { setSecHeading(e.target.value.toUpperCase()) }} value={secHeading}></input>
+          
+              <div className='d-flex flex-wrap align-items-center'>
+                <h6 className='my-4'>Components: </h6>
+                <div className='d-flex justify-content-evenly w-75 flex-wrap'>
+                  {headings.map((head, index) => {
+                    return (<>
+                      <div className=" d-flex bg-primary text-white align-items-center rounded-2 px-2 my-2">
+                        <p className="my-2" style={{ fontSize: "2vmin" }}>{head.heading}</p>
+                        <button className='btn btn-danger p-1 m-1' onClick={() => {
+                          if(window.confirm("Delete the Heading: ", head.heading, "?")){
+                            let newHeadings = headings;
+                            newHeadings.splice(index, 1);
+                            setHeadings(newHeadings);
+                            setHeadings([...headings]);
+                          }}}>x</button>
+                      </div></>)})}
+                </div>
+                </div>
               <div className="d-flex justify-content-between">
                 <div className='my-3'>
                   <p>Heading:</p>
@@ -200,8 +289,9 @@ function App() {
                           newList.splice(index, 1);
                           setList(newList);
                           sessionStorage.setItem("localList", JSON.stringify(list));
-                          setList([...list,])
-                          console.log(list)
+                          setList([...list,]);
+                          setSections([...sections]);
+                          console.log(list);
                         }
                       }}>-</button>
                     </div>
@@ -241,6 +331,7 @@ function App() {
                             setPara(newPara);
                             sessionStorage.setItem("localPara", JSON.stringify(para));
                             setPara([...para]);
+                            setSections([...sections]);
                           }}>-</button>
                         </div>
                       </>
@@ -255,7 +346,9 @@ function App() {
 
               <div className='d-flex justify-content-center my-3'>
                 <button className="btn btn-primary w-25" onClick={() => {
-                  if (heading === "" && side === "" && date === "" && place === "" && subHeading === "" && projectLink === "" && list.length === 0 && para.length === 0) {
+                  if (secHeading === "")
+                    window.alert("Section Name Empty! ")
+                  else if (heading === "" && side === "" && date === "" && place === "" && subHeading === "" && projectLink === "" && list.length === 0 && para.length === 0) {
                     window.alert("All fields empty!")
                   } else {
                     // Call addHeading function (replace this with your actual function)
@@ -266,19 +359,19 @@ function App() {
               </div>
               <div className='d-flex flex-column align-items-center'>
                 <button className='btn btn-success w-50' onClick={() => { if (secHeading === "") window.alert("Section Name Empty!"); else submitSection() }}>Submit Section</button>
-                <button className='btn btn-warning my-5'><div ><PDFDownloadLink style={{textDecoration:"none", color: "black"}} document={<PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} />} fileName={`${input.fname}_${input.lname}_Resume.pdf`} ref={btnref}>
+                <button className='btn btn-warning my-5'><div ><PDFDownloadLink style={{ textDecoration: "none", color: "black" }} document={<PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} />} fileName={`${input.fname}_${input.lname}_Resume.pdf`} ref={btnref}>
                   {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download')}
                 </PDFDownloadLink> <i class="fa-solid fa-download"></i></div></button>
               </div>
             </div>
           </div>
-          <h5 style={{fontFamily:"Pricedown"}}>CREATED BY : <a href="mailto:adityawarvadekar11@gmail.com">ADITYA WARVADEKAR</a></h5>
+          <h5 style={{ fontFamily: "Pricedown" }}>CREATED BY : <a href="mailto:adityawarvadekar11@gmail.com">ADITYA WARVADEKAR</a></h5>
         </div>
 
 
         <PDFViewer width={"50%"} height={"700px"} className='pdfDoc'><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer>
       </div >
-      
+
     </>
 
   );
@@ -291,19 +384,19 @@ export default App;
 
 
 // {
-//   secHeading: "EXPERIENCE",
-//   headings: [
-//     {
-//       heading: "Newbieron Technologies",
-//       subHeading: "Web Developer Intern",
-//       date: "Jul 2023 - Sep 2023",
-//       place: "New Delhi",
-//       list: [
-//         "Created Responsive Pages", "Attended this this this event cerononsdgek",
-//         "Contributed this this this and thids",
-//         "Got this award and that appraisal"
-//       ]
-//     },
+// secHeading: "EXPERIENCE",
+// headings: [
+//   {
+//     heading: "Newbieron Technologies",
+//     subHeading: "Web Developer Intern",
+//     date: "Jul 2023 - Sep 2023",
+//     place: "New Delhi",
+//     list: [
+//       "Created Responsive Pages", "Attended this this this event cerononsdgek",
+//       "Contributed this this this and thids",
+//       "Got this award and that appraisal"
+//     ]
+//   },
 //     {
 //       heading: "Newbieron Technologies",
 //       subHeading: "Web Developer Intern",
