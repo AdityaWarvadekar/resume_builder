@@ -65,7 +65,7 @@ function PDFDoc(props) {
                 <View style={styles.bullet}>
                     <Text>{'\u2022' + "   "}</Text>
                 </View>
-                <Text>{children}</Text>
+                <Text style={{textAlign: "left"}}>{children}</Text>
             </View>
         )
     }
