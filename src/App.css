@@ -3,17 +3,25 @@
   src: url("./components/fonts/pricedown\ bl.otf");
 }
 
+/* 222831 Black
+393E46 Grey
+00ADB5 Blue
+EEEEEE White */
+
 .App {
   /* text-align: center; */
   display: flex;
   background-color: #E4DCCF;
-  color: #222831;
 }
 
 .back{
   width: 50%;
   padding: 3vmin;
-  
+  background-color: #1E2022;
+  color: #EEEEEE;
+}
+input{
+  box-shadow: 0 3px 5px black;
 }
 .text-box{
   background-color: white;
@@ -27,7 +35,27 @@
   position: fixed;
   right:0;
 }
+.buttonList{
+  display: flex;
+  align-items: baseline;
+  padding: 0 3px;
+  border-radius: 20px;
+  border: 1px solid ;
+}
+.buttonList:hover{
+  background-color: #EEEEEE;
+  color:#1E2022;
+  transition: 500ms;
+}
+.buttonList p{
+  padding: 0 5px;
+  margin: 0;
+}
 
+.close:hover{
+  transform: scale(1.5);
+  transition: 0.5s
+}
 
 
 @media only screen and (max-width: 768px) {
@@ -50,6 +78,10 @@
   .back{
     width: 100%;
     padding: 3vmin;
+  }
+
+  .mobile{
+    display: none;
   }
 
 }

@@ -255,9 +255,9 @@ function App() {
 
         <div className=" back">
           <div className="d-flex justify-content-center w-100">
-            <p style={{ fontSize: "8vmin", fontFamily: "Pricedown" }}>RESUME MAKER</p>
+            <p style={{ fontSize: "8vmin", fontFamily: "Pricedown", color: "#00ADB5", textShadow:"0 3px 5px black" }}>RESUME MAKER</p>
           </div>
-          <div className='d-flex'>
+          <div className='d-flex justify-content-evenly '>
             <div className='d-flex flex-column align-items-center'>
               <p className='my-2'>First Name:</p>
               <input type="Text" className="form-control" id="" name="fname" value={input.fname} onChange={(e) => { setInput({ ...input, fname: e.target.value.toUpperCase() }) }} />
@@ -267,8 +267,10 @@ function App() {
               <input type="Text" className="form-control" id="" name="lname" value={input.lname} onChange={(e) => { setInput({ ...input, lname: e.target.value.toUpperCase() }) }} />
             </div>
           </div>
+          <div className='d-flex flex-column align-items-center'>
           <p className='my-2'>Address: </p>
           <input type="Text" className="form-control" id="" name="address" value={input.address} onChange={onChangeInput} />
+          </div>
           <div className='d-flex my-5'>
             <div className="d-flex flex-column align-items-center justify-content-center">
               <p>Phone: </p>
@@ -293,15 +295,15 @@ function App() {
 
           <div className=' section '>
 
-            <div className="text-white bg-dark p-3 my-3 rounded-5">
+            <div className="text-white p-3 my-3 rounded-2" style={{backgroundColor: "#222831", boxShadow: '0 10px 10px black'}}>
               <div className='d-flex flex-wrap align-items-center'>
-                <h5>Sections: </h5>
+                <h5 className='my-4'>SECTIONS: </h5>
                 <div className='d-flex justify-content-evenly w-75 flex-wrap'>
                   {sections.map((section, index) => {
                     return (<>
-                      <div className=" d-flex bg-primary text-white align-items-center rounded-2 px-2 my-2" onClick={() => updateSectionFields(section.secId)}>
+                      <div className="buttonList" onClick={() => updateSectionFields(section.secId)}>
                         <p className="my-2" style={{ fontSize: "2vmin" }}>{section.secHeading}</p>
-                        <button className='btn btn-danger p-1 m-1' onClick={() => {
+                        <p className='' onClick={() => {
                           if (window.confirm("Delete the Section: "+ section.secHeading+"?")) {
                             let newSections = sections;
                             newSections.splice(index, 1);
@@ -313,7 +315,7 @@ function App() {
                           // newSections.splice(index, 1);
                           // setSections(newSections);
                           // console.log(sections);
-                        }}>x</button>
+                        }}><i class="fa-solid fa-circle-xmark text-danger close"></i></p>
                       </div>
                     </>)
                   })}
@@ -324,27 +326,27 @@ function App() {
               <h2>Section: </h2>
               <p>Section Heading:</p>
               <input type="text" className='form-control w-50' onChange={(e) => { setSecHeading(e.target.value.toUpperCase()) }} value={secHeading}></input>
-
+              <hr></hr>
               <div className='d-flex flex-wrap align-items-center'>
                 <h6 className='my-4'>Components: </h6>
                 <div className='d-flex justify-content-evenly w-75 flex-wrap'>
                   {headings.map((head, index) => {
                     return (<>
-                      <div className=" d-flex bg-primary text-white align-items-center rounded-2 px-2 my-2" onClick={() => updateHeadingFields(head.headingId)}>
+                      <div className="buttonList" onClick={() => updateHeadingFields(head.headingId)}>
                         <p className="my-2" style={{ fontSize: "2vmin" }}>{head.heading}</p>
-                        <button className='btn btn-danger p-1 m-1' onClick={() => {
+                        <p className='' onClick={() => {
                           if (window.confirm("Delete the Heading: "+ head.heading+"?")) {
                             let newHeadings = headings;
                             newHeadings.splice(index, 1);
                             setHeadings(newHeadings);
                             setHeadings([...headings]);
                           }
-                        }}>x</button>
+                        }}><i class="fa-solid fa-circle-xmark text-danger close"></i></p>
                       </div></>)
                   })}
                 </div>
               </div>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between" style={{marginTop: "3vh"}}>
                 <div className='my-3'>
                   <p>Heading:</p>
                   <input type="text" className='form-control w-100' onChange={(e) => { setHeading(e.target.value) }} value={heading}></input>
@@ -358,7 +360,7 @@ function App() {
                   <input type="text" className='form-control w-75' onChange={(e) => { setDate(e.target.value) }} value={date}></input>
                 </div>
               </div>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <div className='my-3'>
                   <p>Sub-Heading:</p>
                   <input type="text" className='form-control w-100' onChange={(e) => { setSubHeading(e.target.value) }} value={subHeading}></input>
@@ -368,7 +370,7 @@ function App() {
                   <input type="text" className='form-control w-75' onChange={(e) => { setPlace(e.target.value) }} value={place}></input>
                 </div>
               </div>
-              <div className='d-flex align-items-center justify-content-evenly my-2'>
+              <div className='d-flex align-items-center justify-content-evenly my-4'>
                 <strong>List: </strong>
                 <input type="text" className='form-control w-75' onChange={(e) => { setListItem(e.target.value) }} value={listItem}></input>
                 <button className='btn btn-primary' onClick={() => { if (listItem !== "") { setList([...list, listItem]); setListItem(""); } }}>+</button>
@@ -400,9 +402,9 @@ function App() {
 
 
 
-              <div className=' px-2'>
-                <strong>Sentence: </strong>
-                <div className="d-flex justify-content-between align-items-center">
+              <div className='px-3'>
+                <p>Sentence: </p>
+                <div className="d-flex  align-items-center justify-content-between">
                   <div className=''>
                     <p>Title:</p>
                     <input type="text" className='form-control w-100' onChange={(e) => { setTitle(e.target.value) }} value={title}></input>
@@ -410,7 +412,7 @@ function App() {
                   :
                   <div className='d-flex flex-column align-items-center'>
                     <p>Description:</p>
-                    <input type="text" className='form-control w-75' onChange={(e) => { setDescription(e.target.value) }} value={description}></input>
+                    <input type="text" className='form-control w-100' onChange={(e) => { setDescription(e.target.value) }} value={description}></input>
                   </div>
                   <div className='my-5'>
                     <button className='btn btn-primary' onClick={() => { if (!(title === "" && description === "")) { setPara([...para, { title: title, description: description }]); setTitle(""); setDescription(""); } }}>+</button>
@@ -470,8 +472,7 @@ function App() {
           <h5 style={{ fontFamily: "Pricedown" }}>CREATED BY : <a href="mailto:adityawarvadekar11@gmail.com">ADITYA WARVADEKAR</a></h5>
         </div>
 
-
-        <PDFViewer width={"50%"} height={"700px"} className='pdfDoc'><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer>
+      <div className='mobile'><PDFViewer width={"50%"} height={"700px"} className='pdfDoc'><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer></div>  
       </div >
 
     </>
