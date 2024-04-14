@@ -7,6 +7,18 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 
 function App() {
 
+//   window.onbeforeunload = function (e) {
+//     e = e || window.event;
+
+//     // For IE and Firefox prior to version 4
+//     if (e) {
+//         e.returnValue = 'Sure?';
+//     }
+
+//     // For Safari
+//     return 'Sure?';
+// };
+
   const [input, setInput] = useState({
     fname: "JOHN",
     lname: "DOE",
@@ -85,6 +97,7 @@ function App() {
   // })
 
   const localSections = sessionStorage.getItem("localSections") === null ? [{
+    secId: 1,
     secHeading: "SAMPLE LAYOUT",
     headings: [
       {
@@ -95,7 +108,7 @@ function App() {
         list: list
       }
     ]
-  }] : JSON.parse(sessionStorage.getItem("localHeadings"));
+  }] : JSON.parse(sessionStorage.getItem("localSections"));
   const [sections, setSections] = useState(localSections);
   useEffect(() => {
     sessionStorage.setItem("localSections", JSON.stringify(sections));
@@ -103,6 +116,7 @@ function App() {
 
   const addHeading = () => {
     setHeadings([...headings, {
+      headingId: headings.length > 0 ? headings[headings.length - 1].headingId + 1 : 1,
       heading: heading,
       side: side,
       date: date,
@@ -123,6 +137,87 @@ function App() {
 
   }
 
+  const [editMode, setEditMode] = useState(false);
+  const [headingEditId, setHeadingEditId] = useState(null);
+
+  const updateHeadingFields = (id) => {
+    let heads = headings;
+    let index = heads.findIndex(item => item.headingId === id);
+    if (index != -1) {
+      // console.log(heads[index]);
+      let head = heads[index];
+      setList(head.list);
+      setPara(head.para);
+      setHeading(head.heading);
+      setPlace(head.place);
+      setDate(head.date);
+      setSubHeading(head.subHeading);
+      setSide(head.side);
+      setProjectLink(head.projectLink);
+      setEditMode(true);
+      setHeadingEditId(id);
+    }
+  }
+
+  const updateHeading = (id) => {
+    let heads = headings;
+    let index = heads.findIndex(item => item.headingId === id);
+    if (index != -1) {
+      heads.splice(index, 1, {
+        headingId: id,
+        heading: heading,
+        side: side,
+        date: date,
+        place: place,
+        subHeading: subHeading,
+        list: list,
+        para: para,
+        projectLink: projectLink
+      });
+      setList([]);
+      setPara([]);
+      setHeading("");
+      setPlace("");
+      setDate("");
+      setSubHeading("");
+      setSide("");
+      setProjectLink("");
+      setEditMode(false);
+      setHeadingEditId(null);
+    }
+  }
+
+  const [secEdit, setSecEdit] = useState(false);
+  const [secEditId, setsecEditId] = useState(null);
+
+  const updateSectionFields = (id) => {
+    let secs = sections;
+    let index = secs.findIndex(item => item.secId === id);
+    if (index != -1) {
+      let sec = secs[index];
+      setSecHeading(sec.secHeading);
+      setHeadings(sec.headings);
+      setSecEdit(true);
+      setsecEditId(id);
+    }
+  }
+
+  const updateSection = (id) => {
+    let secs = sections;
+    let index = secs.findIndex(item => item.secId === id);
+    if(index!=-1){
+      secs.splice(index, 1, {
+        secId: id,
+        secHeading: secHeading,
+        headings: headings
+      });
+      setSecEdit(false);
+      setsecEditId(null);
+      setSecHeading("");
+        setHeadings([]);
+    }
+  }
+
   const btnref = useRef(null);
 
   const submitSection = () => {
@@ -133,6 +228,7 @@ function App() {
     else if (heading !== "" || subHeading !== "" || date !== "" || place !== "" || listItem !== "" || list.length !== 0 || para.length !== 0 || title !== "" || description !== "" || projectLink !== "" || side !== "") {
       if (window.confirm("Submit the section without adding current component?")) {
         setSections([...sections, {
+          secId: sections.length > 0 ? sections[sections.length - 1].secId + 1 : 1,
           secHeading: secHeading,
           headings: headings
         }]);
@@ -143,6 +239,7 @@ function App() {
     }
     else {
       setSections([...sections, {
+        secId: sections.length > 0 ? sections[sections.length - 1].secId + 1 : 1,
         secHeading: secHeading,
         headings: headings
       }]);
@@ -163,11 +260,11 @@ function App() {
           <div className='d-flex'>
             <div className='d-flex flex-column align-items-center'>
               <p className='my-2'>First Name:</p>
-              <input type="Text" className="form-control" id="" name="fname" value={input.fname} onChange={(e)=>{setInput({...input, fname: e.target.value.toUpperCase()})}} />
+              <input type="Text" className="form-control" id="" name="fname" value={input.fname} onChange={(e) => { setInput({ ...input, fname: e.target.value.toUpperCase() }) }} />
             </div>
             <div className='d-flex flex-column align-items-center'>
               <p className='my-2'>Last Name:</p>
-              <input type="Text" className="form-control" id="" name="lname" value={input.lname} onChange={(e)=>{setInput({...input, lname: e.target.value.toUpperCase()})}} />
+              <input type="Text" className="form-control" id="" name="lname" value={input.lname} onChange={(e) => { setInput({ ...input, lname: e.target.value.toUpperCase() }) }} />
             </div>
           </div>
           <p className='my-2'>Address: </p>
@@ -202,10 +299,10 @@ function App() {
                 <div className='d-flex justify-content-evenly w-75 flex-wrap'>
                   {sections.map((section, index) => {
                     return (<>
-                      <div className=" d-flex bg-primary text-white align-items-center rounded-2 px-2 my-2">
+                      <div className=" d-flex bg-primary text-white align-items-center rounded-2 px-2 my-2" onClick={() => updateSectionFields(section.secId)}>
                         <p className="my-2" style={{ fontSize: "2vmin" }}>{section.secHeading}</p>
                         <button className='btn btn-danger p-1 m-1' onClick={() => {
-                          if(window.confirm("Delete the Section: ", section.secHeading, "?")){
+                          if (window.confirm("Delete the Section: "+ section.secHeading+"?")) {
                             let newSections = sections;
                             newSections.splice(index, 1);
                             setSections(newSections);
@@ -227,24 +324,26 @@ function App() {
               <h2>Section: </h2>
               <p>Section Heading:</p>
               <input type="text" className='form-control w-50' onChange={(e) => { setSecHeading(e.target.value.toUpperCase()) }} value={secHeading}></input>
-          
+
               <div className='d-flex flex-wrap align-items-center'>
                 <h6 className='my-4'>Components: </h6>
                 <div className='d-flex justify-content-evenly w-75 flex-wrap'>
                   {headings.map((head, index) => {
                     return (<>
-                      <div className=" d-flex bg-primary text-white align-items-center rounded-2 px-2 my-2">
+                      <div className=" d-flex bg-primary text-white align-items-center rounded-2 px-2 my-2" onClick={() => updateHeadingFields(head.headingId)}>
                         <p className="my-2" style={{ fontSize: "2vmin" }}>{head.heading}</p>
                         <button className='btn btn-danger p-1 m-1' onClick={() => {
-                          if(window.confirm("Delete the Heading: ", head.heading, "?")){
+                          if (window.confirm("Delete the Heading: "+ head.heading+"?")) {
                             let newHeadings = headings;
                             newHeadings.splice(index, 1);
                             setHeadings(newHeadings);
                             setHeadings([...headings]);
-                          }}}>x</button>
-                      </div></>)})}
+                          }
+                        }}>x</button>
+                      </div></>)
+                  })}
                 </div>
-                </div>
+              </div>
               <div className="d-flex justify-content-between">
                 <div className='my-3'>
                   <p>Heading:</p>
@@ -353,12 +452,15 @@ function App() {
                   } else {
                     // Call addHeading function (replace this with your actual function)
                     console.log("callinnnngngngngn");
-                    addHeading();
+                    if (editMode)
+                      updateHeading(headingEditId);
+                    else
+                      addHeading();
                   }
-                }}>+ Add Heading</button>
+                }}>{editMode ? "Update Heading" : "+ Add Heading"}</button>
               </div>
               <div className='d-flex flex-column align-items-center'>
-                <button className='btn btn-success w-50' onClick={() => { if (secHeading === "") window.alert("Section Name Empty!"); else submitSection() }}>Submit Section</button>
+                <button className='btn btn-success w-50' onClick={() => { if (secHeading === "") window.alert("Section Name Empty!"); else if(secEdit) updateSection(secEditId); else submitSection() }}>{secEdit? "Update Section" : "Submit Section"}</button>
                 <button className='btn btn-warning my-5'><div ><PDFDownloadLink style={{ textDecoration: "none", color: "black" }} document={<PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} />} fileName={`${input.fname}_${input.lname}_Resume.pdf`} ref={btnref}>
                   {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download')}
                 </PDFDownloadLink> <i class="fa-solid fa-download"></i></div></button>
