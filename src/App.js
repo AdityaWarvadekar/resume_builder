@@ -4,20 +4,21 @@ import PDFDoc from './components/PDFDoc';
 import { PDFDownloadLink, PDFViewer, usePDF } from '@react-pdf/renderer';
 import { MobilePDFReader } from 'react-read-pdf';
 import { useEffect, useReducer, useRef, useState } from 'react';
+import Navbar from './Navbar';
 
 function App() {
+  const PORT = "http://localhost:5000";
+  //   window.onbeforeunload = function (e) {
+  //     e = e || window.event;
 
-//   window.onbeforeunload = function (e) {
-//     e = e || window.event;
+  //     // For IE and Firefox prior to version 4
+  //     if (e) {
+  //         e.returnValue = 'Sure?';
+  //     }
 
-//     // For IE and Firefox prior to version 4
-//     if (e) {
-//         e.returnValue = 'Sure?';
-//     }
-
-//     // For Safari
-//     return 'Sure?';
-// };
+  //     // For Safari
+  //     return 'Sure?';
+  // };
 
   const [input, setInput] = useState({
     fname: "JOHN",
@@ -110,6 +111,52 @@ function App() {
     ]
   }] : JSON.parse(sessionStorage.getItem("localSections"));
   const [sections, setSections] = useState(localSections);
+
+  //FETCHING RESUME FROM SERVER
+
+  const getResumes = async () => {
+    // alert(token);
+    const response = await fetch(`${PORT}/resumes`, {
+      method: "GET", headers: {
+        "auth-token": token,
+        "Content-Type": "application/json"
+      }
+    });
+    const json = await response.json();
+    // alert(json);
+    if (json.status === 'ok') {
+      let res = json.resumes.length === 0 ? [] : json.resumes;
+      // console.log(res);
+      if(res.length>0){
+
+      let resume = res[0].resume;
+      // console.log(resume);
+      // if(resume.length>0){
+      //   resume = JSON.parse(resume.resume);
+      setInput({
+        fname: resume.fname,
+        lname: resume.lname,
+        address: resume.address,
+        phone: resume.phone,
+        email: resume.email,
+        linkedin: resume.linkedin,
+        github: resume.github,
+      });
+      setSections(resume.sections);
+      // console.log("INPUT: ", input);
+    }
+    }
+  }
+
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (token) {
+      // alert("Getting resumes now");
+      getResumes();
+    }
+  }, [, token])
+
   useEffect(() => {
     sessionStorage.setItem("localSections", JSON.stringify(sections));
   }, [sections])
@@ -143,7 +190,7 @@ function App() {
   const updateHeadingFields = (id) => {
     let heads = headings;
     let index = heads.findIndex(item => item.headingId === id);
-    if (index != -1) {
+    if (index !== -1) {
       // console.log(heads[index]);
       let head = heads[index];
       setList(head.list);
@@ -162,7 +209,7 @@ function App() {
   const updateHeading = (id) => {
     let heads = headings;
     let index = heads.findIndex(item => item.headingId === id);
-    if (index != -1) {
+    if (index !== -1) {
       heads.splice(index, 1, {
         headingId: id,
         heading: heading,
@@ -193,7 +240,7 @@ function App() {
   const updateSectionFields = (id) => {
     let secs = sections;
     let index = secs.findIndex(item => item.secId === id);
-    if (index != -1) {
+    if (index !== -1) {
       let sec = secs[index];
       setSecHeading(sec.secHeading);
       setHeadings(sec.headings);
@@ -205,7 +252,7 @@ function App() {
   const updateSection = (id) => {
     let secs = sections;
     let index = secs.findIndex(item => item.secId === id);
-    if(index!=-1){
+    if (index !== -1) {
       secs.splice(index, 1, {
         secId: id,
         secHeading: secHeading,
@@ -214,7 +261,7 @@ function App() {
       setSecEdit(false);
       setsecEditId(null);
       setSecHeading("");
-        setHeadings([]);
+      setHeadings([]);
     }
   }
 
@@ -249,13 +296,65 @@ function App() {
     }
   }
 
+  const [resume, setResume] = useState({
+    fname: input.fname,
+    lname: input.lname,
+    github: input.github,
+    address: input.address,
+    linkedin: input.linkedin,
+    phone: input.phone,
+    email: input.email,
+    sections: sections
+  });
+
+  const saveResume = async ()=>{
+    // console.log("RESUM<", {
+    //   fname: input.fname,
+    // lname: input.lname,
+    // github: input.github,
+    // address: input.address,
+    // linkedin: input.linkedin,
+    // phone: input.phone,
+    // email: input.email,
+    // sections: sections
+    // });
+    if(!token){
+      alert("Please Sign Up to Save!");
+      return;
+    }
+    const update = await fetch(`${PORT}/saveResume`, {method: "PATCH", headers:{
+      "auth-token": token,
+      "Content-Type": "application/json"
+    }, body: JSON.stringify({
+      name: "RESUME",
+      resume: {
+        fname: input.fname,
+    lname: input.lname,
+    github: input.github,
+    address: input.address,
+    linkedin: input.linkedin,
+    phone: input.phone,
+    email: input.email,
+    sections: sections
+      }
+    })});
+    const json = await update.json();
+    if(json.status==='ok'){
+      alert("Resume Saved Successfully");
+      window.location.reload();
+    }
+    else{
+      alert(json.status+" : "+json.msg);
+    }
+  }
+
   return (
     <>
+      <Navbar resume={resume}/>
       <div className="App d-flex">
-
         <div className=" back">
           <div className="d-flex justify-content-center w-100">
-            <p style={{ fontSize: "8vmin", fontFamily: "Pricedown", color: "#00ADB5", textShadow:"0 3px 5px black" }}>RESUME MAKER</p>
+            <p style={{ fontSize: "8vmin", fontFamily: "Pricedown", color: "#00ADB5", textShadow: "0 3px 5px black" }}>RESUME MAKER</p>
           </div>
           <div className='d-flex justify-content-evenly '>
             <div className='d-flex flex-column align-items-center'>
@@ -268,8 +367,8 @@ function App() {
             </div>
           </div>
           <div className='d-flex flex-column align-items-center'>
-          <p className='my-2'>Address: </p>
-          <input type="Text" className="form-control" id="" name="address" value={input.address} onChange={onChangeInput} />
+            <p className='my-2'>Address: </p>
+            <input type="Text" className="form-control" id="" name="address" value={input.address} onChange={onChangeInput} />
           </div>
           <div className='d-flex my-5'>
             <div className="d-flex flex-column align-items-center justify-content-center">
@@ -295,7 +394,7 @@ function App() {
 
           <div className=' section '>
 
-            <div className="text-white p-3 my-3 rounded-2" style={{backgroundColor: "#222831", boxShadow: '0 10px 10px black'}}>
+            <div className="text-white p-3 my-3 rounded-2" style={{ backgroundColor: "#222831", boxShadow: '0 10px 10px black' }}>
               <div className='d-flex flex-wrap align-items-center'>
                 <h5 className='my-4'>SECTIONS: </h5>
                 <div className='d-flex justify-content-evenly w-75 flex-wrap'>
@@ -304,7 +403,7 @@ function App() {
                       <div className="buttonList" onClick={() => updateSectionFields(section.secId)}>
                         <p className="my-2" style={{ fontSize: "2vmin" }}>{section.secHeading}</p>
                         <p className='' onClick={() => {
-                          if (window.confirm("Delete the Section: "+ section.secHeading+"?")) {
+                          if (window.confirm("Delete the Section: " + section.secHeading + "?")) {
                             let newSections = sections;
                             newSections.splice(index, 1);
                             setSections(newSections);
@@ -335,7 +434,7 @@ function App() {
                       <div className="buttonList" onClick={() => updateHeadingFields(head.headingId)}>
                         <p className="my-2" style={{ fontSize: "2vmin" }}>{head.heading}</p>
                         <p className='' onClick={() => {
-                          if (window.confirm("Delete the Heading: "+ head.heading+"?")) {
+                          if (window.confirm("Delete the Heading: " + head.heading + "?")) {
                             let newHeadings = headings;
                             newHeadings.splice(index, 1);
                             setHeadings(newHeadings);
@@ -346,7 +445,7 @@ function App() {
                   })}
                 </div>
               </div>
-              <div className="d-flex justify-content-between" style={{marginTop: "3vh"}}>
+              <div className="d-flex justify-content-between" style={{ marginTop: "3vh" }}>
                 <div className='my-3'>
                   <p>Heading:</p>
                   <input type="text" className='form-control w-100' onChange={(e) => { setHeading(e.target.value) }} value={heading}></input>
@@ -392,7 +491,7 @@ function App() {
                           sessionStorage.setItem("localList", JSON.stringify(list));
                           setList([...list,]);
                           setSections([...sections]);
-                          console.log(list);
+                          // console.log(list);
                         }
                       }}>-</button>
                     </div>
@@ -453,7 +552,7 @@ function App() {
                     window.alert("All fields empty!")
                   } else {
                     // Call addHeading function (replace this with your actual function)
-                    console.log("callinnnngngngngn");
+                    // console.log("callinnnngngngngn");
                     if (editMode)
                       updateHeading(headingEditId);
                     else
@@ -462,7 +561,8 @@ function App() {
                 }}>{editMode ? "Update Heading" : "+ Add Heading"}</button>
               </div>
               <div className='d-flex flex-column align-items-center'>
-                <button className='btn btn-success w-50' onClick={() => { if (secHeading === "") window.alert("Section Name Empty!"); else if(secEdit) updateSection(secEditId); else submitSection() }}>{secEdit? "Update Section" : "Submit Section"}</button>
+                <button className='btn btn-success w-50' onClick={() => { if (secHeading === "") window.alert("Section Name Empty!"); else if (secEdit) updateSection(secEditId); else submitSection() }}>{secEdit ? "Update Section" : "Submit Section"}</button>
+                <button className='btn btn-primary w-50 my-4' onClick={saveResume}>Save Resume</button>
                 <button className='btn btn-warning my-5'><div ><PDFDownloadLink style={{ textDecoration: "none", color: "black" }} document={<PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} />} fileName={`${input.fname}_${input.lname}_Resume.pdf`} ref={btnref}>
                   {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download')}
                 </PDFDownloadLink> <i class="fa-solid fa-download"></i></div></button>
@@ -472,7 +572,7 @@ function App() {
           <h5 style={{ fontFamily: "Pricedown" }}>CREATED BY : <a href="mailto:adityawarvadekar11@gmail.com">ADITYA WARVADEKAR</a></h5>
         </div>
 
-      <div className='mobile'><PDFViewer width={"50%"} height={"700px"} className='pdfDoc'><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer></div>  
+        <div className='mobile'><PDFViewer width={"50%"} height={"700px"} className='pdfDoc'><PDFDoc fname={input.fname} lname={input.lname} address={input.address} phone={input.phone} email={input.email} linkedin={input.linkedin} github={input.github} sections={sections} /></PDFViewer></div>
       </div >
 
     </>

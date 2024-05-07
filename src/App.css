@@ -20,7 +20,7 @@ EEEEEE White */
   background-color: #1E2022;
   color: #EEEEEE;
 }
-input{
+.back input{
   box-shadow: 0 3px 5px black;
 }
 .text-box{
