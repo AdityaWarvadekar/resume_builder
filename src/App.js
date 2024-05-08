@@ -7,7 +7,7 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 import Navbar from './Navbar';
 
 function App() {
-  const PORT = "http://localhost:5000";
+  const PORT = "https://resume-builder-9nte.onrender.com";
   //   window.onbeforeunload = function (e) {
   //     e = e || window.event;
 
