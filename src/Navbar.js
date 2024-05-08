@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Navbar = (props) => {
     const resume = props.resume;
-    const PORT = "http://localhost:5000";
+    const PORT = "https://resume-builder-9nte.onrender.com";
     const loginRef = useRef(null);
     const signUpRef = useRef(null);
 
