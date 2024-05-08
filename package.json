@@ -1,6 +1,6 @@
 {
   "name": "resume_builder",
-  "homepage": "https://adityawarvadekar.github.io/resume_builder",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
