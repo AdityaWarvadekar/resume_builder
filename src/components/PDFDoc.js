@@ -1,9 +1,9 @@
 import { Document, Page, StyleSheet, Text, View, Image, Font, Link } from '@react-pdf/renderer'
 import React from 'react'
-import Regular from "./fonts/cmunrm.ttf"
-import Bold from "./fonts/cmunbx.ttf"
-import BoldItalic from "./fonts/cmunbi.ttf"
-import Italic from "./fonts/cmunti.ttf"
+import Regular from "./fonts/CMU Serif Roman.ttf"
+import Bold from "./fonts/CMU Serif Bold.ttf"
+import BoldItalic from "./fonts/CMU Serif BoldItalic.ttf"
+import Italic from "./fonts/CMU Serif Italic.ttf"
 import phone from "./img/phone.jpg"
 import email from "./img/email.jpg"
 import linkedin from "./img/linkedin.jpg"
